@@ -1,0 +1,19 @@
+fitControl1 <- trainControl(method = "repeatedcv", number = 10, repeats = 10)
+
+getModelInfo()$rf$type
+names(getModelInfo())
+
+#c5 model
+
+c5model <- train(iphoneSentiment~., 
+                  data = trainSet, 
+                  method = "C5.0",
+                trControl = fitControl1
+)
+# predicting the model
+predictedc5y <- predict(c5model, testSet, interval = "prediction", level = .95)
+resultsc5 <-cbind(testSet$iphoneSentiment, predictedc5y,ifelse (testSet$iphoneSentiment == predictedc5y,TRUE,FALSE))
+colnames(resultsc5) <-c("actual","predicted","accuracy")
+
+postResample(predictedc5y,testSet$iphoneSentiment)
+plot(c5model)
